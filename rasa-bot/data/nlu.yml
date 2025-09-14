@@ -1,0 +1,71 @@
+version: "3.1"
+
+# The NLU file contains user intents and their example phrases.
+# This is the "brain" of the bot that learns what a user is asking.
+nlu:
+- intent: greet
+  examples: |
+    - hey there
+    - hello
+    - hi
+    - good morning
+    - good afternoon
+    - how are you?
+    - what's up?
+
+- intent: goodbye
+  examples: |
+    - goodbye
+    - bye
+    - see you later
+    - catch you later
+    - have a good day
+
+- intent: thank_you
+  examples: |
+    - thanks
+    - thank you
+    - thanks a lot
+    - much obliged
+
+- intent: ask_course_info
+  examples: |
+    - what courses are available in the engineering department?
+    - tell me about the computer science curriculum
+    - can you give me details on the biology program?
+    - where can I find a list of courses for the marketing major?
+    - what classes are there for a pre-med student?
+
+- intent: ask_office_hours
+  examples: |
+    - when are professor smith's office hours?
+    - what's the schedule for the advising center?
+    - is the financial aid office open today?
+    - can I meet with the dean?
+
+- intent: ask_event_details
+  examples: |
+    - is there an event this weekend?
+    - what workshops are coming up?
+    - where is the student fair being held?
+    - when is the football game?
+    - are there any campus tours planned?
+
+- intent: chitchat
+  examples: |
+    - what is your name?
+    - who made you?
+    - what can you do?
+    - are you a robot?
+    - tell me a joke
+    - do you like college?
+
+# This is a special intent for queries the bot doesn't understand.
+# The custom action will log these for later review and refinement.
+- intent: unanswered_query_log
+  examples: |
+    - I need help with something else
+    - I am trying to ask about something not on the list
+    - this isn't what I am looking for
+    - that's not right
+

@@ -1,0 +1,54 @@
+version: "3.1"
+
+# The domain defines the entire universe of your bot:
+# intents, responses, actions, and slots.
+intents:
+  - greet
+  - goodbye
+  - thank_you
+  - ask_course_info
+  - ask_office_hours
+  - ask_event_details
+  - chitchat
+  - unanswered_query_log
+
+actions:
+  # The action that logs unanswered queries.
+  - action_log_unanswered_query
+
+responses:
+  utter_greet:
+  - text: "Hello! How can I help you today?"
+  - text: "Hi there! What can I do for you?"
+  - text: "Hey! How can I assist you with your college questions?"
+
+  utter_goodbye:
+  - text: "Goodbye! Have a great day."
+  - text: "See you later!"
+  - text: "Thanks for stopping by! Bye!"
+
+  utter_thank_you:
+  - text: "You're welcome!"
+  - text: "No problem! Happy to help."
+  - text: "Anytime!"
+
+  utter_course_info:
+  - text: "For information on courses, please check the official academic catalog on our college website. You can find detailed descriptions, prerequisites, and more there!"
+  - text: "All course information is available in the online course catalog. What major are you interested in?"
+
+  utter_office_hours:
+  - text: "Office hours and contact information for staff and faculty can be found on their departmental pages. Is there a specific department you're looking for?"
+
+  utter_event_details:
+  - text: "All upcoming events are listed on the college's main events calendar. You can also check student union bulletin boards for flyers."
+
+  utter_chitchat:
+  - text: "I'm a bot designed to help you with common college questions. I was created to assist you!"
+  - text: "I am a helpful assistant powered by Rasa. My purpose is to provide you with quick information about the college."
+
+  # This is the fallback response for when the bot doesn't understand.
+  # It will be triggered by the `action_log_unanswered_query` and the RulePolicy in stories.yml.
+  utter_fallback:
+  - text: "I'm sorry, I don't quite understand. Could you please rephrase your question?"
+  - text: "I'm not sure how to help with that. Can you ask me in a different way?"
+

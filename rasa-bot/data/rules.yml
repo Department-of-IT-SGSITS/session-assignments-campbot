@@ -1,0 +1,24 @@
+version: "3.1"
+
+# Rules are for very strict, non-negotiable conversation flows.
+# The bot will always follow these rules.
+rules:
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say thanks after user says thanks
+  steps:
+  - intent: thank_you
+  - action: utter_thank_you
+
+# This rule handles the fallback behavior, ensuring that when the NLU
+# has low confidence in a user's intent, the bot logs the query and
+# provides a fallback response.
+- rule: Log unanswered queries and respond with fallback
+  steps:
+  - intent: nlu_fallback
+  - action: action_log_unanswered_query
+  - action: utter_fallback
+

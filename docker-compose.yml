@@ -1,0 +1,45 @@
+
+services:
+  rasa-bot:
+    image: rasa/rasa:3.6.15-full
+    volumes:
+      - ./rasa-bot:/app
+    command:
+      - run
+      - --enable-api
+      - --cors
+      - "*"
+      - --debug
+      - --port
+      - "5005"
+    ports:
+      - "5005:5005"
+    networks:
+      - rasa_network
+    restart: on-failure
+
+  action-server:
+    image: rasa/rasa-sdk:latest
+    volumes:
+      - ./rasa-bot/actions:/app/actions
+    ports:
+      - "5055:5055"
+    networks:
+      - rasa_network
+    restart: on-failure
+
+  web-app:
+    build: ./web-app
+    volumes:
+      - ./web-app:/app
+    ports:
+      - "5000:5000"
+    networks:
+      - rasa_network
+    depends_on:
+      - rasa-bot
+    restart: on-failure
+
+networks:
+  rasa_network:
+    driver: bridge

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="relative bg-white shadow-xl rounded-2xl w-full max-w-xl mx-4 my-8 flex flex-col h-[80vh] overflow-hidden">
+        <!-- Header -->
+        <div class="p-4 bg-gray-100 rounded-t-2xl border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-800">Campbot</h1>
+            <p class="text-sm text-gray-500">Your friendly college assistant</p>
+        </div>
+
+        <!-- Chat messages container -->
+        <div id="chat-container" class="flex-grow p-4 overflow-y-auto space-y-4">
+            <!-- Welcome message -->
+            <div class="flex justify-start">
+                <div class="bg-blue-100 text-gray-800 p-3 rounded-lg max-w-[80%] shadow-sm">
+                    Hello there! I'm Campbot, your personal college assistant. How can I help you today?
+                </div>
+            </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="p-4 border-t border-gray-200 flex items-center bg-gray-50">
+            <input type="text" id="user-input" placeholder="Type your message..." class="flex-grow p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+            <button id="send-btn" class="ml-2 px-5 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 shadow-lg">
+                Send
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        // Function to add a message to the chat container
+        function addMessage(text, sender) {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
+
+            const messageBubble = document.createElement('div');
+            messageBubble.className = sender === 'user'
+                ? 'bg-blue-500 text-white p-3 rounded-lg max-w-[80%] shadow-sm'
+                : 'bg-gray-100 text-gray-800 p-3 rounded-lg max-w-[80%] shadow-sm';
+            
+            messageBubble.textContent = text;
+            messageWrapper.appendChild(messageBubble);
+            chatContainer.appendChild(messageWrapper);
+            
+            // Scroll to the bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Function to send a message to the webhook
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+
+            // Display user message in the chat
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            try {
+                const response = await fetch('/webhook', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message }),
+                });
+
+                const data = await response.json();
+                
+                // Display bot's response
+                if (Array.isArray(data)) {
+                    data.forEach(msg => {
+                        if (msg.text) {
+                            addMessage(msg.text, 'bot');
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('An error occurred. Please try again.', 'bot');
+            }
+        }
+
+        // Event listener for the send button
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Event listener for the Enter key
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

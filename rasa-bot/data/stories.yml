@@ -1,0 +1,31 @@
+version: "3.1"
+
+# Stories are sample conversations that show the bot how to respond
+# in specific situations. They represent the bot's "memory."
+stories:
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_course_info
+  - action: utter_course_info
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: simple course info
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_course_info
+  - action: utter_course_info
+
+- story: basic office hours
+  steps:
+  - intent: ask_office_hours
+  - action: utter_office_hours
+
+- story: about the bot
+  steps:
+  - intent: chitchat
+  - action: utter_chitchat
+
