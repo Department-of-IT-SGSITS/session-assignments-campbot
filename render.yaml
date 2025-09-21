@@ -1,0 +1,46 @@
+services:
+  # Service 1: The user-facing Flask web server
+  - name: web-server
+    type: web # This makes it a public-facing web service
+    env: docker
+    repo: https://github.com/Department-of-IT-SGSITS/session-assignments-campbot.git
+    [cite_start]rootDir: ./web-app # Directory for this service [cite: 96]
+    dockerfile: Dockerfile
+    plan: free # Specifies the free instance type
+    ports:
+      - port: 5000
+        protocol: TCP
+    envVars:
+      - key: RASA_API_URL
+        value: http://rasa-bot:5005/webhooks/rest/webhook # This is the internal URL to your Rasa bot
+      - key: PYTHON_VERSION
+        value: 3.9
+
+  # Service 2: The Rasa NLU and Core server
+  - name: rasa-bot
+    type: p-svc # This is a private service, but will only be used internally
+    env: docker
+    repo: https://github.com/Department-of-IT-SGSITS/session-assignments-campbot.git
+    [cite_start]rootDir: ./rasa-bot # Directory for this service [cite: 85]
+    dockerfile: Dockerfile # Excplicitly define docker file
+    plan: free
+    [cite_start]dockerCommand: "rasa run --enable-api --cors '*' --port 5005" # Command to start the rasa server [cite: 596-602]
+    # The build command below will automatically train your model every time you deploy
+    build:
+      command: "rasa train"
+    ports:
+      - port: 5005
+        protocol: TCP
+
+  # Service 3: The Rasa Action Server for custom logic
+  - name: action-server
+    type: p-svc # swicth to private service
+    env: docker
+    repo: https://github.com/Department-of-IT-SGSITS/session-assignments-campbot.git
+    [cite_start]rootDir: ./rasa-bot # The action server code is within the rasa-bot directory [cite: 85]
+    dockerfile: Dockerfile 
+    plan: free
+    dockerCommand: "rasa run actions --port 5055"
+    ports:
+      - port: 5055
+        protocol: TCP
